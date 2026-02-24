@@ -1,22 +1,28 @@
 import express from 'express';
 import dotenv from "dotenv";
+import path from 'path';
 import cors from 'cors';
 import notesRoute from './routes/notesRoute.js';
 import { connect } from './config/db.js';
 import rateLimiter from './middleware/rateLimiter.js';
 
+
 dotenv.config();
 
 const app = express();
 
+const __dirname = path.resolve();
+
 
 
 //middleware
-app.use (cors(
+if (process.env.NODE_ENV !== "production") {
+    app.use (cors(
     {
         origin: "http://localhost:5173",
     }
-));
+    ));
+}
 
 app.use(express.json());
 
@@ -26,6 +32,15 @@ app.use(rateLimiter)
 
 
 app.use("/api/notes",notesRoute);
+
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname,"../frontend/dist")));
+
+    app.get("*",(req,res)=>{
+        res.sendFile(path.join(__dirname,"../frontend","dist","index.html"));
+});
+}
+
 connect().then(()=>{
     app.listen(5001,()=>{
     console.log("Server is running on port 5001");
