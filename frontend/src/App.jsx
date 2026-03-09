@@ -1,8 +1,8 @@
 import React from 'react'
 import { Route, Routes } from 'react-router'
-import HomePage from './pages/HomePage'
-import Content from './pages/content'
-import CreatePage from './pages/create'
+import HomePage from './pages/HomePage.jsx'
+import Content from './pages/content.jsx'
+import CreatePage from './pages/create.jsx'
 import toast from 'react-hot-toast'
 
 const App = () => {
